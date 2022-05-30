@@ -15,7 +15,6 @@ public class OrePopulator extends BlockPopulator {
 
     //region Private Fields
 
-    private final int minHeight;
     private final int maxHeight;
 
     private final int offsetY;
@@ -41,7 +40,6 @@ public class OrePopulator extends BlockPopulator {
 
         this.logger = logger;
 
-        minHeight = worldMinHeight;
         maxHeight = worldMaxHeight;
 
         String forHash = String.format("%s|%f|%d|%d|%f|%f", oreGenSettings.ore.name(), oreGenSettings.radius, oreGenSettings.triesPerChunk, oreGenSettings.maxPerChunk, oreGenSettings.percentChancePerTry, oreGenSettings.percentChancePerBlock);
@@ -80,7 +78,7 @@ public class OrePopulator extends BlockPopulator {
             int startX = random.nextInt(16) + (chunkX * 16);
             int startZ = random.nextInt(16) + (chunkZ * 16);
 
-            int startY = random.nextInt(minHeight + offsetY, maxHeight + offsetY) - offsetY;
+            int startY = random.nextInt(0, maxHeight + offsetY) - offsetY;
 
             center.setX(startX);
             center.setY(startY);
