@@ -1,0 +1,6 @@
+name: STR.OreGen
+version: 1.0.0
+author: STRICQ
+main: com.str.oregen.Main
+api-version: 1.18
+load: STARTUP
