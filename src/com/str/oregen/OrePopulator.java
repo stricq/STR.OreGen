@@ -53,7 +53,7 @@ public class OrePopulator extends BlockPopulator {
         center = new Location(null, 0, 0, 0);
         point  = center.clone();
 
-        logger.info("OrePopulator created for " + oreGenSettings.ore.name());
+        logger.info("OrePopulator created for " + oreGenSettings.ore.name() + "; Hash " + String.format("%d", baseSeed));
     }
 
     //endregion Constructor
@@ -62,9 +62,7 @@ public class OrePopulator extends BlockPopulator {
 
     @Override
     public void populate(WorldInfo worldInfo, Random r, int chunkX, int chunkZ, LimitedRegion limitedRegion) {
-//      logger.info("OrePopulator called for X:" + chunkX + ", Z:" + chunkZ + " with type " + material + ".");
-
-        random.setSeed(baseSeed + ((long)chunkX << 24) + (long)chunkZ);
+        random.setSeed(baseSeed + (((long)chunkX * 49157 + (long)chunkX) << 24) + (long)chunkZ * 98317 + (long)chunkZ);
 
         final int maxRadius = (limitedRegion.getBuffer() * 2 + 16) / 2;
 
@@ -73,7 +71,9 @@ public class OrePopulator extends BlockPopulator {
         int successCount = 0;
 
         for(int i = 0; i < oreGenSettings.triesPerChunk; ++i) {
-            if (random.nextDouble() > oreGenSettings.percentChancePerTry) continue;
+            double attempt = random.nextDouble();
+
+            if (attempt > oreGenSettings.percentChancePerTry) continue;
 
             int startX = random.nextInt(16) + (chunkX * 16);
             int startZ = random.nextInt(16) + (chunkZ * 16);
@@ -95,7 +95,7 @@ public class OrePopulator extends BlockPopulator {
                         point.setY(center.getY() + y);
                         point.setZ(center.getZ() + z);
 
-                        // (x-cx) ^2 + (y-cy) ^2 + (z-cz) ^2 > r ^2
+                        // (x-cx)^2 + (y-cy)^2 + (z-cz)^2 > r^2
                         if (Math.pow(point.getX() - center.getX(), 2) + Math.pow(point.getY() - center.getY(), 2) + Math.pow(point.getZ() - center.getZ(), 2) > Math.pow(radius, 2)) continue;
 
                         if (random.nextDouble() > oreGenSettings.percentChancePerBlock) continue;
@@ -113,9 +113,13 @@ public class OrePopulator extends BlockPopulator {
                 }
             }
 
-            if (!success) continue;
+            if (!success) {
+                if (oreGenSettings.logAttempts) logger.info(oreGenSettings.ore.name() + "; " + String.format("%.8f <= %.8f", attempt, oreGenSettings.percentChancePerTry) + "; try failed at " + String.format("%d, %d, %d", startX, startY, startZ));
 
-//          logger.info("Try success for " + oreGenSettings.ore.name() + " at CX:" + chunkX + ", CZ:" + chunkZ + "; " + startX + "," + startY + "," + startZ);
+                continue;
+            }
+
+            if (oreGenSettings.logAttempts) logger.info(oreGenSettings.ore.name() + "; " + String.format("%.8f <= %.8f", attempt, oreGenSettings.percentChancePerTry) + "; try succeeded at " + String.format("%d, %d, %d", startX, startY, startZ));
 
             if (++successCount == oreGenSettings.maxPerChunk) break;
         }

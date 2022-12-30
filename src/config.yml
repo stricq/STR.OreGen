@@ -1,0 +1,96 @@
+oreGenSettings:
+  - ==: OreGenSettings
+    percentChancePerTry: 40.0
+    maxPerChunk: 2
+    ore: COAL_ORE
+    triesPerChunk: 4
+    percentChancePerBlock: 80.0
+    radius: 5.5
+  - ==: OreGenSettings
+    percentChancePerTry: 40.0
+    maxPerChunk: 2
+    ore: IRON_ORE
+    triesPerChunk: 4
+    percentChancePerBlock: 80.0
+    radius: 5.5
+  - ==: OreGenSettings
+    percentChancePerTry: 8.5
+    maxPerChunk: 1
+    ore: DIAMOND_ORE
+    triesPerChunk: 3
+    percentChancePerBlock: 40.0
+    radius: 4.5
+  - ==: OreGenSettings
+    percentChancePerTry: 0.005999
+    maxPerChunk: 1
+    ore: DIAMOND_ORE
+    triesPerChunk: 1
+    percentChancePerBlock: 100.0
+    logAttempts: 'true'
+    radius: 16.0
+  - ==: OreGenSettings
+    percentChancePerTry: 8.5
+    maxPerChunk: 1
+    ore: EMERALD_ORE
+    triesPerChunk: 3
+    percentChancePerBlock: 40.0
+    radius: 4.5
+  - ==: OreGenSettings
+    percentChancePerTry: 0.005999
+    maxPerChunk: 1
+    ore: EMERALD_ORE
+    triesPerChunk: 1
+    percentChancePerBlock: 100.0
+    logAttempts: 'true'
+    radius: 16.0
+  - ==: OreGenSettings
+    percentChancePerTry: 50.0
+    maxPerChunk: 5
+    ore: LAPIS_ORE
+    triesPerChunk: 5
+    percentChancePerBlock: 80.0
+    radius: 2.5
+  - ==: OreGenSettings
+    percentChancePerTry: 40.0
+    maxPerChunk: 8
+    ore: COPPER_ORE
+    triesPerChunk: 8
+    percentChancePerBlock: 80.0
+    radius: 2.5
+  - ==: OreGenSettings
+    percentChancePerTry: 10.0
+    maxPerChunk: 3
+    ore: REDSTONE_ORE
+    triesPerChunk: 3
+    percentChancePerBlock: 80.0
+    radius: 2.5
+  - ==: OreGenSettings
+    percentChancePerTry: 20.0
+    maxPerChunk: 1
+    ore: GOLD_ORE
+    triesPerChunk: 3
+    percentChancePerBlock: 60.0
+    radius: 3.5
+  - ==: OreGenSettings
+    percentChancePerTry: 8.5
+    maxPerChunk: 1
+    ore: ANCIENT_DEBRIS
+    triesPerChunk: 3
+    percentChancePerBlock: 40.0
+    radius: 5.5
+  - ==: OreGenSettings
+    percentChancePerTry: 20.0
+    maxPerChunk: 1
+    ore: SPONGE
+    triesPerChunk: 5
+    percentChancePerBlock: 100.0
+    replacedBlocks: SAND
+    radius: 2.0
+  - ==: OreGenSettings
+    percentChancePerTry: 30.0
+    maxPerChunk: 1
+    ore: CLAY
+    triesPerChunk: 5
+    percentChancePerBlock: 100.0
+    replacedBlocks: SAND,DIRT,COARSE_DIRT,GRASS_BLOCK,GRAVEL
+    radius: 3.0

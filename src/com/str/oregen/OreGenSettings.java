@@ -39,7 +39,9 @@ public class OreGenSettings implements ConfigurationSerializable {
         defaultReplacedBlocks.add(Material.STONE);
         defaultReplacedBlocks.add(Material.ANDESITE);
         defaultReplacedBlocks.add(Material.DIORITE);
+        defaultReplacedBlocks.add(Material.CALCITE);
         defaultReplacedBlocks.add(Material.DEEPSLATE);
+        defaultReplacedBlocks.add(Material.TUFF);
     }
 
     //endregion Static Initializers
@@ -47,22 +49,18 @@ public class OreGenSettings implements ConfigurationSerializable {
     //region Constructors
 
     public OreGenSettings(Material ore, double radius, int triesPerChunk, int maxPerChunk, double percentChancePerTry, double percentChancePerBlock) {
-        this.ore = ore;
+        this(ore, radius, triesPerChunk, maxPerChunk, percentChancePerTry, percentChancePerBlock, new ArrayList<>(), false);
+    }
 
-        this.radius = radius;
-
-        this.triesPerChunk = triesPerChunk;
-        this.maxPerChunk   = maxPerChunk;
-
-        this.percentChancePerTry = percentChancePerTry;
-        this.percentChancePerBlock = percentChancePerBlock;
-
-        isValid = true;
-
-        replacedBlocks = new ArrayList<>();
+    public OreGenSettings(Material ore, double radius, int triesPerChunk, int maxPerChunk, double percentChancePerTry, double percentChancePerBlock, boolean logAttempts) {
+        this(ore, radius, triesPerChunk, maxPerChunk, percentChancePerTry, percentChancePerBlock, new ArrayList<>(), logAttempts);
     }
 
     public OreGenSettings(Material ore, double radius, int triesPerChunk, int maxPerChunk, double percentChancePerTry, double percentChancePerBlock, ArrayList<Material> replacedBlocks) {
+        this(ore, radius, triesPerChunk, maxPerChunk, percentChancePerTry, percentChancePerBlock, replacedBlocks, false);
+    }
+
+    public OreGenSettings(Material ore, double radius, int triesPerChunk, int maxPerChunk, double percentChancePerTry, double percentChancePerBlock, ArrayList<Material> replacedBlocks, boolean logAttempts) {
         this.ore = ore;
 
         this.radius = radius;
@@ -70,17 +68,21 @@ public class OreGenSettings implements ConfigurationSerializable {
         this.triesPerChunk = triesPerChunk;
         this.maxPerChunk   = maxPerChunk;
 
-        this.percentChancePerTry = percentChancePerTry;
+        this.percentChancePerTry   = percentChancePerTry;
         this.percentChancePerBlock = percentChancePerBlock;
 
         isValid = true;
 
         this.replacedBlocks = replacedBlocks;
+
+        this.logAttempts = logAttempts;
     }
 
     @SuppressWarnings("unused")
     public OreGenSettings(Map<String, Object> map) {
         replacedBlocks = new ArrayList<>();
+
+        logAttempts = false;
 
         ore = Material.getMaterial(((String)map.get("ore")).toUpperCase());
 
@@ -95,8 +97,8 @@ public class OreGenSettings implements ConfigurationSerializable {
         triesPerChunk = (int)map.get("triesPerChunk");
         maxPerChunk   = (int)map.get("maxPerChunk");
 
-        percentChancePerTry   = (double)map.get("percentChancePerTry");
-        percentChancePerBlock = (double)map.get("percentChancePerBlock");
+        percentChancePerTry   = ((double)map.get("percentChancePerTry"))   / 100.0d;
+        percentChancePerBlock = ((double)map.get("percentChancePerBlock")) / 100.0d;
 
         if (map.containsKey("replacedBlocks")) {
             String[] blocks = ((String)map.get("replacedBlocks")).split("\\s*,\\s*");
@@ -108,6 +110,10 @@ public class OreGenSettings implements ConfigurationSerializable {
 
                 replacedBlocks.add(material);
             }
+        }
+
+        if (map.containsKey("logAttempts")) {
+            logAttempts = Boolean.parseBoolean((String)map.get("logAttempts"));
         }
 
         isValid = true;
@@ -131,6 +137,8 @@ public class OreGenSettings implements ConfigurationSerializable {
 
     public double percentChancePerBlock;
 
+    public boolean logAttempts;
+
     //endregion Public Fields
 
     //region ConfigurationSerializable Implementation
@@ -146,8 +154,8 @@ public class OreGenSettings implements ConfigurationSerializable {
         map.put("triesPerChunk", triesPerChunk);
         map.put("maxPerChunk",   maxPerChunk);
 
-        map.put("percentChancePerTry", percentChancePerTry);
-        map.put("percentChancePerBlock", percentChancePerBlock);
+        map.put("percentChancePerTry",   percentChancePerTry   * 100.0d);
+        map.put("percentChancePerBlock", percentChancePerBlock * 100.0d);
 
         if (!replacedBlocks.isEmpty()) {
             StringBuilder builder = new StringBuilder();
@@ -159,6 +167,10 @@ public class OreGenSettings implements ConfigurationSerializable {
             map.put("replacedBlocks", csv.substring(0, csv.length() - 1));
         }
 
+        if (logAttempts) {
+            map.put("logAttempts", String.valueOf(true));
+        }
+
         return map;
     }
 
@@ -167,7 +179,7 @@ public class OreGenSettings implements ConfigurationSerializable {
     //region Public Methods
 
     public Material getOre(Material original) {
-        return original == Material.DEEPSLATE ? getDeepSlateOre() : ore;
+        return original == Material.DEEPSLATE || original == Material.TUFF ? getDeepSlateOre() : ore;
     }
 
     public Material getDeepSlateOre() {
