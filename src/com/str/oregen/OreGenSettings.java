@@ -97,8 +97,17 @@ public class OreGenSettings implements ConfigurationSerializable {
         triesPerChunk = (int)map.get("triesPerChunk");
         maxPerChunk   = (int)map.get("maxPerChunk");
 
+        if (triesPerChunk <  1) triesPerChunk = 1;
+        if (triesPerChunk > 50) triesPerChunk = 50;
+
+        if (maxPerChunk <  1) maxPerChunk = 1;
+        if (maxPerChunk > 50) maxPerChunk = 50;
+
         percentChancePerTry   = ((double)map.get("percentChancePerTry"))   / 100.0d;
         percentChancePerBlock = ((double)map.get("percentChancePerBlock")) / 100.0d;
+
+        if (percentChancePerTry   <= 0 || percentChancePerTry   > 1) percentChancePerTry   = 0.5d;
+        if (percentChancePerBlock <= 0 || percentChancePerBlock > 1) percentChancePerBlock = 0.5d;
 
         if (map.containsKey("replacedBlocks")) {
             String[] blocks = ((String)map.get("replacedBlocks")).split("\\s*,\\s*");
