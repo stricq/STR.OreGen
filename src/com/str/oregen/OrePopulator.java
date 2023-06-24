@@ -21,11 +21,6 @@ public class OrePopulator extends BlockPopulator {
 
     private final long baseSeed;
 
-    private final Location center;
-    private final Location point;
-
-    private final Random random;
-
     @SuppressWarnings({"unused", "FieldCanBeLocal"})
     private final Logger logger;
 
@@ -48,11 +43,6 @@ public class OrePopulator extends BlockPopulator {
 
         offsetY = worldMinHeight < 0 ? Math.abs(worldMinHeight) : 0;
 
-        random = new Random();
-
-        center = new Location(null, 0, 0, 0);
-        point  = center.clone();
-
         logger.info("OrePopulator created for " + oreGenSettings.ore.name() + "; Hash " + String.format("%d", baseSeed));
     }
 
@@ -62,7 +52,10 @@ public class OrePopulator extends BlockPopulator {
 
     @Override
     public void populate(WorldInfo worldInfo, Random r, int chunkX, int chunkZ, LimitedRegion limitedRegion) {
-        random.setSeed(baseSeed + (((long)chunkX * 49157 + (long)chunkX) << 24) + (long)chunkZ * 98317 + (long)chunkZ);
+        Location center = new Location(null, 0, 0, 0);
+        Location point  = center.clone();
+
+        Random random = new Random(baseSeed + (((long)chunkX * 49157 + (long)chunkX) << 24) + (long)chunkZ * 98317 + (long)chunkZ);
 
         final int maxRadius = (limitedRegion.getBuffer() * 2 + 16) / 2;
 
